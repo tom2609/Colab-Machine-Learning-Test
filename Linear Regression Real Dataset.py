@@ -7,10 +7,16 @@ from matplotlib import pyplot as plt
 pd.options.display.max_rows = 10
 pd.options.display.float_format = "{:.1f}".format
 
+if tf.config.list_physical_devices('GPU'):
+  print("TensorFlow **IS** using the GPU")
+else:
+  print("TensorFlow **IS NOT** using the GPU")
+
 def build_model(my_learning_rate):
     model = tf.keras.models.Sequential()
 
-    model.add(tf.keras.layers.Dense(units=1, input_shape=(1,)))
+    model.add(tf.keras.layers.Dense(units=10, input_shape=(1,), activation="relu"))
+    model.add(tf.keras.layers.Dense(units=10, input_shape=(1,)))
 
     model.compile(optimizer=tf.keras.optimizers.RMSprop(learning_rate=my_learning_rate), loss="mean_squared_error", metrics=[tf.keras.metrics.RootMeanSquaredError()])
 
@@ -77,9 +83,9 @@ training_df = pd.read_csv(r"C:\Users\Tom\Projects\Machine Learning Test\californ
 training_df["median_house_value"] /= 1000.0
 training_df["rooms_per_person"] = training_df["total_rooms"] / training_df["population"]
 
-learning_rate=0.06
+learning_rate=0.001
 epochs=30
-my_batch_size=30
+my_batch_size=60
 
 my_feature = "median_income"
 my_label = "median_house_value"
@@ -89,7 +95,8 @@ my_model = None
 my_model = build_model(learning_rate)
 trained_weight, trained_bias, epochs, rmse = train_model(my_model, training_df, my_feature, my_label, epochs, my_batch_size)
 
-predict_house_values(10, my_feature, my_label)
+# my_model.summary()
+# predict_house_values(10, my_feature, my_label)
 # corr_matrix = training_df.corr()
 # print(corr_matrix)
 # plot_the_model(trained_weight, trained_bias, my_feature, my_label)
