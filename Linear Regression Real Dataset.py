@@ -15,7 +15,7 @@ else:
 def build_model(my_learning_rate):
     model = tf.keras.models.Sequential()
 
-    model.add(tf.keras.layers.Dense(units=10, input_shape=(1,), activation="relu"))
+    model.add(tf.keras.layers.Dense(units=10, input_shape=(1,)))
     model.add(tf.keras.layers.Dense(units=10, input_shape=(1,)))
 
     model.compile(optimizer=tf.keras.optimizers.RMSprop(learning_rate=my_learning_rate), loss="mean_squared_error", metrics=[tf.keras.metrics.RootMeanSquaredError()])
@@ -78,7 +78,7 @@ def predict_house_values(n, feature, label):
   for i in range(n):
     print ("%5.0f %6.0f %15.0f" % (training_df[feature][10000 + i], training_df[label][10000 + i], predicted_values[i][0] ))
 
-training_df = pd.read_csv(r"C:\Users\Tom\Projects\Machine Learning Test\california_housing_train.csv")
+training_df = pd.read_csv(r"C:\Users\Tom\Projects\Data Stash\california_housing_train.csv")
 
 training_df["median_house_value"] /= 1000.0
 training_df["rooms_per_person"] = training_df["total_rooms"] / training_df["population"]
