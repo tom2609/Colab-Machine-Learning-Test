@@ -17,10 +17,21 @@ def build_model(my_learning_rate):
 
     model.add(tf.keras.layers.Dense(units=10, input_shape=(1,)))
     model.add(tf.keras.layers.Dense(units=10, input_shape=(1,)))
+    model.add(tf.keras.layers.Dense(units=10, input_shape=(1,)))
 
     model.compile(optimizer=tf.keras.optimizers.RMSprop(learning_rate=my_learning_rate), loss="mean_squared_error", metrics=[tf.keras.metrics.RootMeanSquaredError()])
 
     return model
+
+# def build_model(my_learning_rate):
+#     model = tf.keras.models.Sequential()
+
+#     model.add(tf.keras.layers.Dense(units=10))
+#     model.add(tf.keras.layers.Dense(units=10))
+
+#     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=my_learning_rate), loss=tf.keras.losses.BinaryCrossentropy(), metrics=[tf.keras.metrics.BinaryAccuracy(),tf.keras.metrics.FalseNegatives()])
+
+#     return model
 
 def train_model(model, df, feature, label, epochs, batch_size):
     history = model.fit(x=df[feature], y=df[label], batch_size=batch_size, epochs=epochs)
