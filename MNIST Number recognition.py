@@ -48,12 +48,20 @@ def plot_the_loss_curve(epochs, loss):
 
   plt.plot(epochs, loss, label="Loss")
   plt.legend()
-  plt.ylim([loss.min()*0.97, loss.max])
+  plt.ylim([loss.min()*0.97, loss.max()])
   plt.show()
 
+def prediction(n, feature):
+  """Predict house values based on a feature."""
+
+  batch = feature[10000:10000 + n]
+  predicted_number = my_model.predict(batch)
+
+  return predicted_number
 train_df = pd.read_csv(r"C:\Users\Tom\Projects\Data Stash\mnist_train.csv")
 
-check = random.randrange(0,60000)
+train_check = random.randrange(0,60000)
+test_check = random.randrange(0,10000)
 
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
@@ -69,4 +77,4 @@ batch_size = 70
 my_model = build_model()
 trained_weight, trained_bias, epochs, loss = train_model(my_model, x_train, y_train, epochs, batch_size)
 plot_the_loss_curve(epochs, loss)
-# print("Prediction: " + str(my_model.predict(x_test)))
+Guess = prediction(test_check, x_test)
