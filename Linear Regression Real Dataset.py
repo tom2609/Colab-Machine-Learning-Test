@@ -112,3 +112,21 @@ trained_weight, trained_bias, epochs, rmse = train_model(my_model, training_df, 
 # print(corr_matrix)
 # plot_the_model(trained_weight, trained_bias, my_feature, my_label)
 # plot_the_loss_curve(epochs, rmse)
+
+# imageFile = r"C:\Users\Tom\Projects\Data Stash\train-images.idx3-ubyte"
+# trainingFile = r"C:\Users\Tom\Projects\Data Stash\train-labels.idx1-ubyte"
+# trainingImage = idx2numpy.convert_from_file(imageFile)
+# trainingLabel = idx2numpy.convert_from_file(trainingFile)
+
+# check = random.randrange(0,60000)
+
+# image = trainingImage[check]
+# label = trainingLabel[check]
+# label = label.astype(np.uint8)
+
+# inputs = []
+# for rows_of_pixels in image:
+# 	for pixel in rows_of_pixels:
+# 		inputs.append(pixel)
+
+# new = [inputs, label]
