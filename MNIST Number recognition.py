@@ -12,15 +12,18 @@ else:
   print("TensorFlow **IS NOT** using the GPU")
 
 
-def build_model(my_learning_rate):
+def build_model():
   model = tf.keras.models.Sequential()
 
-  model.add(tf.keras.Input(shape=(784)))
-  model.add(tf.keras.layers.Dense(units=16, activation=tf.nn.relu))
-  model.add(tf.keras.layers.Dense(units=16, activation=tf.nn.relu))
-  model.add(tf.keras.layers.Dense(units=10))
 
-  model.compile(optimizer=tf.keras.optimizers.RMSprop(learning_rate=my_learning_rate), loss="mean_squared_error", metrics=[tf.keras.metrics.RootMeanSquaredError()])
+  model.add(tf.keras.layers.Conv2D(filters=32, kernel_size=(3, 3), input_shape=(28, 28, 1)))
+  model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2), strides=2))
+  model.add(tf.keras.layers.Flatten())
+  model.add(tf.keras.layers.Dense(units=64, activation=tf.nn.relu))
+  model.add(tf.keras.layers.Dropout(rate=0.2))
+  model.add(tf.keras.layers.Dense(10, activation=tf.nn.softmax))
+
+  model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
   return model
 
@@ -34,38 +37,36 @@ def train_model(model, feature, label, epochs, batch_size):
 
   hist = pd.DataFrame(history.history)
 
-  rmse = hist["root_mean_squared_error"]
+  loss = hist['accuracy']
 
-  return trained_weight, trained_bias, epochs, rmse
+  return trained_weight, trained_bias, epochs, loss
 
-def plot_the_loss_curve(epochs, rmse):
+def plot_the_loss_curve(epochs, loss):
   plt.figure()
   plt.xlabel("Epoch")
-  plt.ylabel("Root Mean Squared Error")
+  plt.ylabel("Loss")
 
-  plt.plot(epochs, rmse, label="Loss")
+  plt.plot(epochs, loss, label="Loss")
   plt.legend()
-  plt.ylim([rmse.min()*0.97, rmse.max()])
+  plt.ylim([loss.min()*0.97, loss.max])
   plt.show()
 
-imageFile = r"C:\Users\Tom\Projects\Data Stash\train-images.idx3-ubyte"
-trainingFile = r"C:\Users\Tom\Projects\Data Stash\train-labels.idx1-ubyte"
-trainingImage = idx2numpy.convert_from_file(imageFile)
-trainingLabel = idx2numpy.convert_from_file(trainingFile)
+train_df = pd.read_csv(r"C:\Users\Tom\Projects\Data Stash\mnist_train.csv")
 
-check = random.randrange(0,60001)
+check = random.randrange(0,60000)
 
-image = trainingImage[check]
-label = trainingLabel[check]
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
-inputs = []
-for rows_of_pixels in image:
-	for pixel in rows_of_pixels:
-		inputs.append(pixel)
+x_train = x_train.reshape(60000, 28, 28).astype("float32") / 255
+x_test = x_test.reshape(10000, 28, 28).astype("float32") / 255
 
-my_learning_rate = 0.01
-epochs = 30
-batch_size = 20
+y_train = y_train.astype("float32")
+y_test = y_test.astype("float32")
 
-my_model = build_model(my_learning_rate)
-trained_weight, trained_bias, epochs, rmse = train_model(my_model, image, label, epochs, batch_size)
+epochs = 5
+batch_size = 70
+
+my_model = build_model()
+trained_weight, trained_bias, epochs, loss = train_model(my_model, x_train, y_train, epochs, batch_size)
+plot_the_loss_curve(epochs, loss)
+# print("Prediction: " + str(my_model.predict(x_test)))
