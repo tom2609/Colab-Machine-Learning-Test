@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
-import idx2numpy
 import tensorflow as tf
 import random
 
@@ -58,7 +57,6 @@ def prediction(n, feature):
   predicted_number = my_model.predict(batch)
 
   return predicted_number
-train_df = pd.read_csv(r"C:\Users\Tom\Projects\Data Stash\mnist_train.csv")
 
 train_check = random.randrange(0,60000)
 test_check = random.randrange(0,10000)
