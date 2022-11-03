@@ -43,7 +43,7 @@ def train_model(model, feature, label, epochs, batch_size):
 def plot_the_loss_curve(epochs, loss):
   plt.figure()
   plt.xlabel("Epoch")
-  plt.ylabel("Loss")
+  plt.ylabel("Accuracy")
 
   plt.plot(epochs, loss, label="Loss")
   plt.legend()
@@ -51,15 +51,10 @@ def plot_the_loss_curve(epochs, loss):
   plt.show()
 
 def prediction(n, feature):
-  """Predict house values based on a feature."""
-
   batch = feature[10000:10000 + n]
   predicted_number = my_model.predict(batch)
 
   return predicted_number
-
-train_check = random.randrange(0,60000)
-test_check = random.randrange(0,10000)
 
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
@@ -69,10 +64,18 @@ x_test = x_test.reshape(10000, 28, 28).astype("float32") / 255
 y_train = y_train.astype("float32")
 y_test = y_test.astype("float32")
 
-epochs = 5
-batch_size = 70
+epochs = 20
+batch_size = 100
 
 my_model = build_model()
 trained_weight, trained_bias, epochs, loss = train_model(my_model, x_train, y_train, epochs, batch_size)
 plot_the_loss_curve(epochs, loss)
-Guess = prediction(test_check, x_test)
+my_model.save(r"C:\Users\Tom\Projects\Data Stash\mnist-model.h5", overwrite=True, include_optimizer=True)
+
+selected_element = np.random.randint(0,9999)
+test_feature = x_test[selected_element].reshape((28,28))
+test_label = y_test[selected_element]
+plt.imshow(test_feature, cmap="Greys")
+plt.show()
+print("Actual label: " + str(test_label))
+print("Predicted label: " + str(my_model.predict(test_feature.reshape((1,28,28,1)))[0].argmax()))
