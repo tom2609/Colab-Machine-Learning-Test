@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
 import tensorflow as tf
-import random
 
 
 if tf.config.list_physical_devices('GPU'):
@@ -49,12 +48,6 @@ def plot_the_loss_curve(epochs, loss):
   plt.legend()
   plt.ylim([loss.min()*0.97, loss.max()])
   plt.show()
-
-def prediction(n, feature):
-  batch = feature[10000:10000 + n]
-  predicted_number = my_model.predict(batch)
-
-  return predicted_number
 
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
